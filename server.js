@@ -3,12 +3,15 @@ const sequelize = require('./config/database');
 const blagueRoutes = require('./routes/blagues');
 const Joke = require('./models/joke');
 const defaultJokes = require('./config/defaultJokes');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 const app = express();
 const API_PREFIX = '/api/v1';
 
 app.use(express.json());
 app.use(`${API_PREFIX}/blagues`, blagueRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Handle unknown routes
 app.use((_, __, next) => {
