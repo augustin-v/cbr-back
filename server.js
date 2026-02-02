@@ -1,12 +1,14 @@
 const express = require('express');
 const sequelize = require('./config/database');
-const jokeRoutes = require('./routes/jokes');
+const blagueRoutes = require('./routes/blagues');
+const Joke = require('./models/joke');
+const defaultJokes = require('./config/defaultJokes');
 
 const app = express();
 const API_PREFIX = '/api/v1';
 
 app.use(express.json());
-app.use(`${API_PREFIX}/jokes`, jokeRoutes);
+app.use(`${API_PREFIX}/blagues`, blagueRoutes);
 
 // Handle unknown routes
 app.use((_, __, next) => {
@@ -27,6 +29,10 @@ const PORT = process.env.PORT || 3000;
 (async function start() {
   try {
     await sequelize.sync();
+    const count = await Joke.count();
+    if (count === 0) {
+      await Joke.bulkCreate(defaultJokes, { validate: true });
+    }
     app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);
     });
