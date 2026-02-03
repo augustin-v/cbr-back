@@ -5,10 +5,12 @@ const Joke = require('./models/joke');
 const defaultJokes = require('./config/defaultJokes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
+const cors = require('cors');
 
 const app = express();
 const API_PREFIX = '/api/v1';
 
+app.use(cors());
 app.use(express.json());
 app.use(`${API_PREFIX}/blagues`, blagueRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
